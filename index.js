@@ -48,6 +48,36 @@ fs.appendFile('./shadoow.txt','Hey  This content will be appended' ,'utf-8',(err
     console.log('Content appended successfully!');
 } )
 
+// Create a Http server 
+const http = require('http');
+const PORT=8000;
 
+const myServer = http.createServer((req, res) => {
+    const log = `${Date.now()}: ${req.url} New request received \n`;
 
+    fs.appendFile('./log.txt', log, (err) => {
+        if (err) {
+            console.error("Error writing to log file:", err);
+            res.end("Internal Server Error");
+            return;
+        }
+
+        switch (req.url) {
+            case '/':
+                res.end("HomePage");
+                break;
+
+            case '/about':
+                res.end("About Page");
+                break;
+
+            default:
+                res.end("404 Error Page");
+        }
+    });
+});
+
+myServer.listen(PORT, () => {
+    console.log(`The server is running at http://localhost:${PORT}`);
+});
 
